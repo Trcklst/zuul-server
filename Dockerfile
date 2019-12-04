@@ -16,4 +16,8 @@ WORKDIR /app
 # copy over the built artifact from the maven image
 COPY --from=maven /app/zuul-server.jar ./zuul-server.jar
 # set the startup command to run your binary
-CMD ["java", "-jar", "-Dspring.profiles.active=docker", "/app/zuul-server.jar"]
+CMD java \
+-Dspring.profiles.active=${SPRING_PROFILE} \
+-Dserver.port=${SERVER_PORT} \
+-jar \
+/app/zuul-server.jar
