@@ -1,7 +1,11 @@
-GET http://localhost:8888/api/register
-Accept: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ1c2VyMkBnbWFpbC5jb20iLCJzY29wZSI6WyJhbGwiXSwic3Vic2NyaXB0aW9uIjpudWxsLCJleHAiOjE1OTEwMDQ3MTMsInVzZXJJZCI6MSwiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl0sImp0aSI6IjIzODMzY2I1LTczZTEtNDc4Yy04ZjI5LTkxYzMzMzBkZjdiOSIsImNsaWVudF9pZCI6InRyY2tsc3QifQ.22Fb5H-MFZi4QL8VhlcelKDODuO0tx_nRVcj_FGh0jc
+POST http://localhost:8888/api/youtube/search
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ1c2VyMkBnbWFpbC5jb20iLCJzY29wZSI6WyJhbGwiXSwic3Vic2NyaXB0aW9uIjpudWxsLCJleHAiOjE1OTEwNjU3MzIsInVzZXJJZCI6MSwiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl0sImp0aSI6ImFhNTlmYWE1LTBkNjktNGNiNi1iYzMwLWIxOGM1MjU3MDI2MiIsImNsaWVudF9pZCI6InRyY2tsc3QifQ.SGjDXDGsk5_8zXnf-waCTy9CAQDhkd_PDeJF4lWB7WU
 
+{
+   "query": "l",
+   "itemsNumber": "10"
+}
 ###
 POST http://localhost:8888/api/register
 Content-Type: application/json
