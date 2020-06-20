@@ -4,13 +4,13 @@ import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import com.trklst.zuulserver.feign.AuthenticationFeignService;
+import com.trklst.zuulserver.security.config.SecurityProperties;
 import com.trklst.zuulserver.security.excpetions.InvalidTokenException;
 import com.trklst.zuulserver.security.excpetions.NoTokenSendException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -19,7 +19,7 @@ public class SecurityFilter extends ZuulFilter {
     private static final String BEARER_PREFIX = "Bearer ";
 
     private AuthenticationFeignService authenticationFeignService;
-    private List<String> patternsWithoutSecurity;
+    private SecurityProperties securityProperties;
 
     @Override
     public String filterType() {
@@ -34,7 +34,7 @@ public class SecurityFilter extends ZuulFilter {
     @Override
     public boolean shouldFilter() {
         HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
-        return patternsWithoutSecurity.stream()
+        return securityProperties.getExcludedPatterns().stream()
                 .noneMatch(pattern -> request.getRequestURI().startsWith(pattern));
     }
 
@@ -72,7 +72,7 @@ public class SecurityFilter extends ZuulFilter {
     }
 
     @Autowired
-    public void setPatternsWithoutSecurity(List<String> patternsWithoutSecurity) {
-        this.patternsWithoutSecurity = patternsWithoutSecurity;
+    public void setSecurityProperties(SecurityProperties securityProperties) {
+        this.securityProperties = securityProperties;
     }
 }
