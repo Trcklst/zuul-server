@@ -42,27 +42,27 @@ public class SecurityFilter extends ZuulFilter {
     public Object run() throws ZuulException {
         String token = getToken();
         Map<String, Object> checkTokenResponse = callCheckToken(token);
-        if (checkTokenResponse == null)
-            throw new InvalidTokenException();
         boolean isValidToken = (boolean) checkTokenResponse.getOrDefault("active", false);
-        if (isValidToken)
-            return null;
-        throw new InvalidTokenException();
+        Integer userId = (Integer) checkTokenResponse.getOrDefault("userId", null);
+        if (!isValidToken || userId == null)
+            throw new InvalidTokenException();
+        RequestContext.getCurrentContext().addZuulRequestHeader("userId", userId.toString());
+        return userId;
     }
 
     private String getToken() throws ZuulException {
         HttpServletRequest request = RequestContext.getCurrentContext().getRequest();
         String authorization = request.getHeader("authorization");
-        if (authorization == null)
+        if (authorization == null || authorization.isBlank())
             throw new NoTokenSendException();
         return authorization.replace(BEARER_PREFIX, "");
     }
 
-    private Map<String, Object> callCheckToken(String token) {
+    private Map<String, Object> callCheckToken(String token) throws InvalidTokenException {
         try {
             return authenticationFeignService.checkToken(token);
         } catch (Exception e) {
-            return null;
+            throw new InvalidTokenException();
         }
     }
 
