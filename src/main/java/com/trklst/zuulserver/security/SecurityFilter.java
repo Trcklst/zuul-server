@@ -20,6 +20,7 @@ public class SecurityFilter extends ZuulFilter {
 
     private AuthenticationFeignService authenticationFeignService;
     private SecurityProperties securityProperties;
+    private AdminValidator adminValidator;
 
     @Override
     public String filterType() {
@@ -45,6 +46,10 @@ public class SecurityFilter extends ZuulFilter {
         boolean isValidToken = (boolean) checkTokenResponse.getOrDefault("active", false);
         Integer userId = (Integer) checkTokenResponse.getOrDefault("userId", null);
         if (!isValidToken || userId == null)
+            throw new InvalidTokenException();
+
+        boolean isUserAuthorized = adminValidator.isUserAuthorized(checkTokenResponse);
+        if (!isUserAuthorized)
             throw new InvalidTokenException();
         RequestContext.getCurrentContext().addZuulRequestHeader("userId", userId.toString());
         return userId;
@@ -74,5 +79,10 @@ public class SecurityFilter extends ZuulFilter {
     @Autowired
     public void setSecurityProperties(SecurityProperties securityProperties) {
         this.securityProperties = securityProperties;
+    }
+
+    @Autowired
+    public void setAdminValidator(AdminValidator adminValidator) {
+        this.adminValidator = adminValidator;
     }
 }
